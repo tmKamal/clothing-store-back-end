@@ -12,5 +12,5 @@ const userSchema=new Schema({
 })
 
 userSchema.plugin(uniqueValidator);// to add the unique behaviour to the email, using a 3rd party package as mentioned above.
-module.exports=mongoose.model('User',userSchema);//Manager->(managers will be the name of the collection.)
+module.exports=mongoose.model('User',userSchema);//User->(users will be the name of the collection.)
 

@@ -10,6 +10,6 @@ const adminSchema=new Schema({
     image:{type:String,required:true}
 })
 
-userSchema.plugin(uniqueValidator);// to add the unique behaviour to the email, using a 3rd party package as mentioned above.
+adminSchema.plugin(uniqueValidator);// to add the unique behaviour to the email, using a 3rd party package as mentioned above.
 module.exports=mongoose.model('Admin',adminSchema);//Admin->(admins will be the name of the collection.)
 
