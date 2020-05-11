@@ -2,6 +2,7 @@ const express =require('express');
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const adminRoutes=require("./routes/admin-routes");
+const categoryRoutes=require("./routes/category-routes");
 const HttpError=require("./models/http-error");
 
 const app=express();
@@ -22,6 +23,7 @@ app.use((req, res, next) => {//this custom middleware use to solve the error whe
 
 
 app.use("/api/admin", adminRoutes);
+app.use("/api/categories", categoryRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError("page not found!", 404);
