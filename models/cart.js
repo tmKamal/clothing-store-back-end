@@ -12,10 +12,12 @@ const CartSchema = new mongoose.Schema({
 				ref: 'Product'
 			},
 			qty: {
-				type: Number
+				type: Number,
+				default: 1
 			},
 			size: {
-				type: String
+				type: String,
+				default: 'm'
 			}
 		}
 	]
