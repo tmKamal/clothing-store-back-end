@@ -13,12 +13,15 @@ router.post('/', async (req, res) => {
 		const p = mongoose.Types.ObjectId(product);
 		let cart = await Cart.findOne({ user: id });
 
-		// if (cart) {
-		// 	const newItem = { p, qty, size };
-		// 	cart.products.unshift(newItem);
-		// 	await cart.save();
-		// 	return res.json(cart);
-		// }
+		if (cart) {
+			const newAItem = {};
+			newAItem.product = p;
+			newAItem.qty = qty;
+			newAItem.size = size;
+			cart.products.unshift(newAItem);
+			await cart.save();
+			return res.json(cart);
+		}
 		const newItem = {};
 		newItem.user = id;
 		newItem.products = {};
@@ -27,8 +30,25 @@ router.post('/', async (req, res) => {
 		newItem.products.size = size;
 
 		cart = new Cart(newItem);
-		// await cart.save();
+		await cart.save();
 		return res.json(cart);
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server error');
+	}
+});
+
+// @route   GET api/cart/
+// @desc    Get cart items
+// @access  private
+router.get('/', async (req, res) => {
+	try {
+		const id = mongoose.Types.ObjectId(req.body.user);
+		let cart = await Cart.findOne({ user: id });
+		if (cart) {
+			return res.json(cart);
+		}
+		return res.json();
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('Server error');
@@ -41,15 +61,17 @@ router.post('/', async (req, res) => {
 router.post('/updateqty', async (req, res) => {
 	try {
 		let id = mongoose.Types.ObjectId(req.body.product);
+		const userId = mongoose.Types.ObjectId(req.body.user);
 		const updatingQty = req.body.qty;
-		const profile = await Profile.updateOne(
-			{ user: req.user.id, 'products.product': id },
+		const cart = await Cart.updateOne(
+			{ user: req.body.user, 'products.product': id },
 			{ $set: { 'products.$.qty': updatingQty } }
 		);
-		if (profile.n == 0) {
+		if (cart.n == 0) {
 			return res.status(400).json({ msg: 'Cannott find object' });
 		}
-		res.status(200).json({ msg: 'Updated successfully' });
+		const cart2 = await Cart.findOne({ user: userId });
+		res.json(cart2);
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('Server error');
@@ -62,15 +84,17 @@ router.post('/updateqty', async (req, res) => {
 router.post('/updatesize', async (req, res) => {
 	try {
 		let id = mongoose.Types.ObjectId(req.body.product);
+		const userId = mongoose.Types.ObjectId(req.body.user);
 		const updatingSize = req.body.size;
 		const cart = await Cart.updateOne(
-			{ user: req.user.id, 'products.product': id },
+			{ user: req.body.user, 'products.product': id },
 			{ $set: { 'products.$.size': updatingSize } }
 		);
 		if (cart.n == 0) {
 			return res.status(400).json({ msg: 'Cannott find object' });
 		}
-		res.status(200).json({ msg: 'Updated successfully' });
+		const cart2 = await Cart.findOne({ user: userId });
+		res.json(cart2);
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('Server error');
@@ -85,12 +109,15 @@ router.post('/removeitem', async (req, res) => {
 		const removeId = mongoose.Types.ObjectId(req.body.product);
 		const userId = mongoose.Types.ObjectId(req.body.user);
 		const cart = await Cart.update({ user: userId }, { $pull: { products: { product: removeId } } });
+
 		if (cart.nModified == 0) {
 			return res.status(400).json({ msg: 'Cannot find the item' });
 		}
-		res.status(200).json({ msg: 'Item removed successfully' });
+
+		let cart2 = await Cart.findOne({ user: userId });
+		res.json(cart2);
 	} catch (err) {
-		onsole.error(err.message);
+		console.error(err.message);
 		res.status(500).send('Server error');
 	}
 });
