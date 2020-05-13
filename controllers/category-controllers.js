@@ -31,6 +31,7 @@ const createCategory = async (req, res, next) => {
   const newCategory = new Category({
     name,
     image: fileUrl,
+    products:[]
   });
 
   try {
