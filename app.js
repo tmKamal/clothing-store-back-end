@@ -7,6 +7,7 @@ const HttpError=require("./models/http-error");
 const fs=require("fs");
 const path=require("path");
 const cartRoutes = require('./routes/cart-routes');
+const productRoutes=require("./routes/product-routes");
 const app=express();
 
 
@@ -30,6 +31,7 @@ app.use((req, res, next) => {//this custom middleware use to solve the error whe
 app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/product',productRoutes);
 
 app.use((req, res, next) => {
 	const error = new HttpError('page not found!', 404);
