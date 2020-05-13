@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const Category = require("../models/category");
+const url = require('url');
 
 const getAllCategories = async (req, res, next) => {
   let categories;
@@ -26,10 +27,10 @@ const createCategory = async (req, res, next) => {
     );
   }
   const { name } = req.body;
-
+  let fileUrl = req.file.path.replace(/\\/g, "/");
   const newCategory = new Category({
     name,
-    image: "https://robohash.org/set_set3/bgset_bg1/3.14159?size=500x500",
+    image: fileUrl,
   });
 
   try {
