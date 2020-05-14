@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
 	try {
 		const id = mongoose.Types.ObjectId(req.body.user);
-		let cart = await Cart.findOne({ user: id });
+		let cart = await Cart.findOne({ user: id }).populate('products.product');
 		if (cart) {
 			return res.json(cart);
 		}

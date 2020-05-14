@@ -11,7 +11,7 @@ const fileUpload=multer({
     limits:500000,
     storage:multer.diskStorage({
         destination:(req,file,callback)=>{
-            callback(null,'uploads/images');
+            callback(null,'uploads/images'); 
         },
         filename:(req,file,callback)=>{
             const extention=MIME_TYPE_MAP[file.mimetype];
