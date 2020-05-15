@@ -46,12 +46,12 @@ const createProduct = async(req, res, next) => {
     return next(new HttpError("Please fill out all the fields carefully.", 422));
   }
   const { name, price, discount, qty,category } = req.body;
-  
+  let fileUrl = req.file.path.replace(/\\/g, "/");
   const newProduct = new Product({
     name,
     price,
     discount,
-    image:'https://robohash.org/set_set3/bgset_bg1/3.14159?size=500x500',
+    image:fileUrl,
     qty,
     category
   });

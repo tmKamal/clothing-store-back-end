@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const Category = require("../models/category");
-const url = require('url');
+
 
 const getAllCategories = async (req, res, next) => {
   let categories;
