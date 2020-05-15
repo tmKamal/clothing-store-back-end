@@ -1,6 +1,6 @@
 const express = require("express");
 const { check } = require("express-validator");
-
+const fileUpload=require("../middleware/file-upload");
 const productController = require("../controllers/product-controller");
 
 const router = express.Router();
@@ -11,6 +11,7 @@ router.get("/category/:cid", productController.getProductsByCategoryId);
 
 router.post(
   "/",
+  fileUpload.single('image'),
   check("name").not().isEmpty(),
   check("price").not().isEmpty(),
   check("discount").not().isEmpty(),
