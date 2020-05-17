@@ -38,17 +38,50 @@ router.post('/', async (req, res) => {
 	}
 });
 
-// @route   GET api/cart/
+// @route   POST api/cart/load
 // @desc    Get cart items
 // @access  private
-router.get('/', async (req, res) => {
+router.post('/load', async (req, res) => {
 	try {
 		const id = mongoose.Types.ObjectId(req.body.user);
-		let cart = await Cart.findOne({ user: id }).populate('products.product');
+		let cart = await Cart.findOne({ user: id });
 		if (cart) {
-			return res.json(cart);
+			return res.json(cart.products);
 		}
-		return res.json();
+
+		const newItem = {};
+		newItem.user = id;
+		let ct = new Cart(newItem);
+		await ct.save();
+		return res.json(ct.products);
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server error');
+	}
+});
+
+// @route   POST api/cart/load
+// @desc    Get cart items
+// @access  private
+router.post('/loadcheckout', async (req, res) => {
+	try {
+		const id = mongoose.Types.ObjectId(req.body.user);
+		let cart = await Cart.findOne({ user: id }).populate('products.product', [
+			'name',
+			'price',
+			'image',
+			'discount',
+			'qty'
+		]);
+		if (cart) {
+			return res.json(cart.products);
+		}
+
+		const newItem = {};
+		newItem.user = id;
+		let ct = new Cart(newItem);
+		await ct.save();
+		return res.json(ct.products);
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('Server error');
@@ -63,15 +96,15 @@ router.post('/updateqty', async (req, res) => {
 		let id = mongoose.Types.ObjectId(req.body.product);
 		const userId = mongoose.Types.ObjectId(req.body.user);
 		const updatingQty = req.body.qty;
-		const cart = await Cart.updateOne(
+		const cart = await Cart.update(
 			{ user: req.body.user, 'products.product': id },
-			{ $set: { 'products.$.qty': updatingQty } }
+			{ $inc: { 'products.$.qty': updatingQty } }
 		);
 		if (cart.n == 0) {
 			return res.status(400).json({ msg: 'Cannott find object' });
 		}
-		const cart2 = await Cart.findOne({ user: userId });
-		res.json(cart2);
+		const cart2 = await Cart.findOne({ user: userId }).populate('products.product', [ 'price', 'image' ]);
+		res.json(cart2.products);
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('Server error');
