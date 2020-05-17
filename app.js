@@ -8,6 +8,7 @@ const fs=require("fs");
 const path=require("path");
 const cartRoutes = require('./routes/cart-routes');
 const productRoutes=require("./routes/product-routes");
+const userRoutes=require("./routes/user-routes");
 const app=express();
 
 
@@ -32,6 +33,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/product',productRoutes);
+app.use('/api/user',userRoutes)
 
 app.use((req, res, next) => {
 	const error = new HttpError('page not found!', 404);
