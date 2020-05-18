@@ -9,6 +9,7 @@ module.exports = (req, res, next) => {
     so we have to skip the Bearer part to retrive the token
     we have use the split function for this.
     */
+
 	if (req.method === 'OPTIONS') {
 		return next();
 	}
@@ -30,4 +31,5 @@ module.exports = (req, res, next) => {
 
 		return next(error);
 	}
+
 };
