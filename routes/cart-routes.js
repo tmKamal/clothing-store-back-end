@@ -58,7 +58,7 @@ router.post('/load', async (req, res) => {
 	}
 });
 
-// @route   POST api/cart/load
+// @route   POST api/cart/loadCheckout
 // @desc    Get cart items
 // @access  private
 router.post('/loadcheckout', async (req, res) => {

@@ -14,12 +14,14 @@ router.post('/', async (req, res) => {
 		let wishlist = await Wishlist.findOne({ user: id });
 
 		if (wishlist) {
-			const newItem = { p };
+			const newItem = {};
+			newItem.product = p;
 			wishlist.products.unshift(newItem);
 			await wishlist.save();
 			return res.json(wishlist);
 		}
 		const newItem = {};
+		newItem.user = id;
 		newItem.products = {};
 		newItem.products.product = p;
 
@@ -32,14 +34,31 @@ router.post('/', async (req, res) => {
 	}
 });
 
-//get the wishlist
-router.get('/', async (req, res) => {
+//get the wishlist with detailed items
+router.post('/getitems', async (req, res) => {
 	try {
 		const id = mongoose.Types.ObjectId(req.userData);
-		let wishlist = new Wishlist.findOne({ user: id }).populate('products.product', [ 'name', 'image' ]);
+		let wishlist = await Wishlist.findOne({ user: id }).populate('products.product', [ 'name', 'image' ]);
 
 		if (wishlist) {
-			return res.json(wishlist);
+			return res.json(wishlist.products);
+		}
+
+		return res.json([]); // sending empty object if user doesn't have a wishlist yet
+	} catch (err) {
+		console.error(err.message);
+		res.status(500).send('Server error');
+	}
+});
+
+//get only the wishlist
+router.post('/get', async (req, res) => {
+	try {
+		const id = mongoose.Types.ObjectId(req.userData);
+		let wishlist = await Wishlist.findOne({ user: id });
+
+		if (wishlist) {
+			return res.json(wishlist.products);
 		}
 
 		return res.json([]); // sending empty object if user doesn't have a wishlist yet
