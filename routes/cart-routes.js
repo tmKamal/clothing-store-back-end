@@ -79,7 +79,7 @@ router.post('/loadcheckout', async (req, res) => {
 		newItem.user = id;
 		let ct = new Cart(newItem);
 		await ct.save();
-		return res.json(ct.products);
+		return res.json([]);
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('Server error');
