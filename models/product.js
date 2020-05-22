@@ -9,8 +9,7 @@ const ProductSchema = new Schema({
   qty: { type: Number, required: true },
   rating: [
     {
-      userId: { type: mongoose.Types.ObjectId, required: true, ref: "Admin" },
-      userName: { type: String, required: true },
+      userId: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
       rate: { type: Number, required: true },
       comment: { type: String, required: true },
     },
