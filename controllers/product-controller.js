@@ -6,6 +6,7 @@ const HttpError = require('../models/http-error');
 const Product = require('../models/product');
 const Category = require('../models/category');
 
+
 const getProductById =async (req, res, next) => {
   const pid = req.params.pid;
   let product;
@@ -152,34 +153,38 @@ const deleteProduct =async (req, res, next) => {
 };
 
 const addReview = async (req, res, next) => {
-	const user = req.userData;
-	const productId =  mongoose.Types.ObjectId(req.params.pid);
-	const { rate, comment } = req.body;
-	
-	let selectedProduct;
-	try {
-		selectedProduct = await Product.findById(productId);
-	} catch (err) {
-		const error = new HttpError('something went wrong on db side, when finding the product id', 500);
-		return next(error);
-	}
+    const user = req.userData;
+    const productId = mongoose.Types.ObjectId(req.params.pid);
+    const { rate, comment } = req.body;
 
-	const newReview = {};
-	newReview.userId = mongoose.Types.ObjectId(user);
-	newReview.rate = rate;
-	newReview.comment = comment;
-	console.log(selectedProduct);
+    let selectedProduct;
+    try {
+        selectedProduct = await Product.findById(productId);
+    } catch (err) {
+        const error = new HttpError(
+            'something went wrong on db side, when finding the product id',
+            500
+        );
+        return next(error);
+    }
 
-	try {
-		selectedProduct.rating.unshift(newReview);
-		await selectedProduct.save();
-	} catch (err) {
-		console.log(err);
-		const error = new HttpError('something went wrong on db side', 500);
-		return next(error);
-	}
+    const newReview = {};
+    newReview.userId = mongoose.Types.ObjectId(user);
+    newReview.rate = rate;
+    newReview.comment = comment;
 
-	res.status(200).json({ product: selectedProduct.toObject({ getters: true }) });
+    try {
+        selectedProduct.rating.unshift(newReview);
+        await selectedProduct.save();
+    } catch (err) {
+        console.log(err);
+        const error = new HttpError('something went wrong on db side', 500);
+        return next(error);
+    }
+
+    res.status(200).json({
+        product: selectedProduct.toObject({ getters: true })
+    });
 };
 
 exports.getProductById = getProductById;
