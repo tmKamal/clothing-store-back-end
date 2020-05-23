@@ -21,7 +21,8 @@ module.exports = (req, res, next) => {
     }
 
     const decodedToken = jwt.verify(token, "cr-hunter&dasunx");
-    req.userData = decodedToken.userId; // from the tokens payload,|| we have added this userId into the token's payload
+    req.userData ={userId:decodedToken.userId,role:decodedToken.role}; // from the tokens payload,|| we have added this userId into the token's payload
+    
     next();
   } catch (err) {
     const error = new HttpError("authentication failed! token error" + err);

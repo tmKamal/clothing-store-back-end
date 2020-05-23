@@ -64,7 +64,7 @@ const signUp = async (req, res, next) => {
   let token;
   try {
     token = jwt.sign(
-      { userId: newAdmin.id, email: newAdmin.email },
+      { userId: newAdmin.id, email: newAdmin.email,role:'admin' },
       "cr-hunter&dasunx",
       { expiresIn: "1h" }
     );
@@ -106,7 +106,7 @@ const login = async (req, res, next) => {
   let token;
   try {
     token = jwt.sign(
-      { userId: identifiedAdmin.id, email: identifiedAdmin.email },
+      { userId: identifiedAdmin.id, email: identifiedAdmin.email,role:'admin' },
       "cr-hunter&dasunx",
       { expiresIn: "1h" }
     );
@@ -116,7 +116,7 @@ const login = async (req, res, next) => {
   }
 
   res.json({
-    userId:identifiedAdmin.id,email:identifiedAdmin.email,token:token
+    userId:identifiedAdmin.id,email:identifiedAdmin.email,token:token,role:'admin'
   });
 };
 

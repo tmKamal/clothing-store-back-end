@@ -68,7 +68,12 @@ const createProduct = async(req, res, next) => {
     const error=new HttpError('category doesnt exists.',500);
     return next(error);
   }
+  if(req.userData.role!=='admin'){
+    const error=new HttpError('You are not authorized to add products to the store.',500);
+    return next(error);
+  }
   console.log(selectedCategory);
+  
 
   try{
     
