@@ -8,6 +8,7 @@ const router = express.Router();
 
 
 router.post("/login", managerControllers.login);
+
 router.post(
     "/signup",
     check("name").not().isEmpty(),
@@ -15,5 +16,6 @@ router.post(
     check("password").isLength({ min: 4 }),
     managerControllers.signUp
   );
+
 
 module.exports = router;

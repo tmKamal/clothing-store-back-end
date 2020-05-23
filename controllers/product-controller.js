@@ -1,10 +1,10 @@
-const {validationResult}=require("express-validator");
-const mongoose=require('mongoose');//this is only imported for the session and the transaction thing. place-schema handles the all other things. 
+const { validationResult } = require('express-validator');
+const mongoose = require('mongoose'); //this is only imported for the session and the transaction thing. place-schema handles the all other things.
 
-const HttpError = require("../models/http-error");
+const HttpError = require('../models/http-error');
 
-const Product=require("../models/product");
-const Category=require('../models/category');
+const Product = require('../models/product');
+const Category = require('../models/category');
 
 const getProductById =async (req, res, next) => {
   const pid = req.params.pid;
@@ -151,8 +151,40 @@ const deleteProduct =async (req, res, next) => {
   res.status(200).json({ product: "Product has been deleted" });
 };
 
+const addReview = async (req, res, next) => {
+	const user = req.userData;
+	const productId =  mongoose.Types.ObjectId(req.params.pid);
+	const { rate, comment } = req.body;
+	
+	let selectedProduct;
+	try {
+		selectedProduct = await Product.findById(productId);
+	} catch (err) {
+		const error = new HttpError('something went wrong on db side, when finding the product id', 500);
+		return next(error);
+	}
+
+	const newReview = {};
+	newReview.userId = mongoose.Types.ObjectId(user);
+	newReview.rate = rate;
+	newReview.comment = comment;
+	console.log(selectedProduct);
+
+	try {
+		selectedProduct.rating.unshift(newReview);
+		await selectedProduct.save();
+	} catch (err) {
+		console.log(err);
+		const error = new HttpError('something went wrong on db side', 500);
+		return next(error);
+	}
+
+	res.status(200).json({ product: selectedProduct.toObject({ getters: true }) });
+};
+
 exports.getProductById = getProductById;
 exports.getProductsByCategoryId = getProductsByCategoryId;
 exports.createProduct = createProduct;
 exports.updateProduct = updateProduct;
-exports.deleteProduct  = deleteProduct ;
+exports.deleteProduct = deleteProduct;
+exports.addReview = addReview;

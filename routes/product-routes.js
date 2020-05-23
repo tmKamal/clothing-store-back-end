@@ -33,6 +33,8 @@ router.patch(
   productController.updateProduct
 );
 
+
+router.patch('/addreview/:pid', productController.addReview);
 router.delete("/:pid", productController.deleteProduct);
 
 module.exports = router;
