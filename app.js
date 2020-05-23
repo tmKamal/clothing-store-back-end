@@ -7,11 +7,14 @@ const HttpError = require('./models/http-error');
 const fs = require('fs');
 const path = require('path');
 const cartRoutes = require('./routes/cart-routes');
-const productRoutes = require('./routes/product-routes');
-const userRoutes = require('./routes/user-routes');
-const managerRoutes = require('./routes/manager-routes');
+
+const productRoutes=require("./routes/product-routes");
+const userRoutes=require("./routes/user-routes");
+const managerRoutes=require("./routes/manager-routes");
 const wishlistRoutes = require('./routes/wishlist-routes');
-const app = express();
+const app=express();
+
+
 
 app.use(bodyParser.json()); //body parser middleware must be declare here, before request reach the routes (ex:placesRoutes,userRoutes), because middleware always parse top to bottom, thats why they have a next().
 
@@ -29,10 +32,12 @@ app.use((req, res, next) => {
 app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/cart', cartRoutes);
+
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/manager', managerRoutes);
+
 
 app.use((req, res, next) => {
 	const error = new HttpError('page not found!', 404);

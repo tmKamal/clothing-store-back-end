@@ -64,7 +64,7 @@ const signUp = async (req, res, next) => {
   let token;
   try {
     token = jwt.sign(
-      { userId: newUser.id, email: newUser.email },
+      { userId: newUser.id, email: newUser.email,role:'user' },
       "cr-hunter&dasunx",
       { expiresIn: "1h" }
     );
@@ -75,7 +75,7 @@ const signUp = async (req, res, next) => {
 
   res
     .status(201)
-    .json({ userId: newUser.id, email: newUser.email, token: token });
+    .json({ userId: newUser.id, email: newUser.email, token: token,role:'user' });
 };
 
 const login = async (req, res, next) => {
@@ -106,7 +106,7 @@ const login = async (req, res, next) => {
   let token;
   try {
     token = jwt.sign(
-      { userId: identifiedUser.id, email: identifiedUser.email },
+      { userId: identifiedUser.id, email: identifiedUser.email,role:'user' },
       "cr-hunter&dasunx",
       { expiresIn: "1h" }
     );
@@ -116,7 +116,7 @@ const login = async (req, res, next) => {
   }
 
   res.json({
-    userId:identifiedUser.id,email:identifiedUser.email,token:token
+    userId:identifiedUser.id,email:identifiedUser.email,token:token,role:'user'
   });
 };
 
