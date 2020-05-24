@@ -7,7 +7,7 @@ const HttpError = require('./models/http-error');
 const fs = require('fs');
 const path = require('path');
 const cartRoutes = require('./routes/cart-routes');
-
+var port = process.env.PORT || 9000;
 const productRoutes=require("./routes/product-routes");
 const userRoutes=require("./routes/user-routes");
 const managerRoutes=require("./routes/manager-routes");
@@ -71,7 +71,7 @@ mongoose
         'mongodb+srv://crhunter:Pass4mongodb@cluster0-g3mcz.mongodb.net/clothing-store?retryWrites=true&w=majority'
     )
     .then(() => {
-        app.listen(9000);
+        app.listen(port);
         console.log('server & db are up and running!!!');
     })
     .catch((err) => {
