@@ -10,6 +10,19 @@ router.get("/:pid", productController.getProductById);
 
 router.get("/category/:cid", productController.getProductsByCategoryId);
 
+router.get("/products/all",productController.getAllProducts);
+
+
+router.patch(
+  "/:pid",
+  check("name").not().isEmpty(),
+  check("price").not().isEmpty(),
+  check("discount").not().isEmpty(),
+  check("qty").not().isEmpty(),
+  
+  productController.updateProduct
+);
+router.delete("/:pid", productController.deleteProduct);
 router.use(authentication);//authentication middleware 
 
 router.post(
@@ -23,18 +36,10 @@ router.post(
   productController.createProduct
 );
 
-router.patch(
-  "/:pid",
-  check("name").not().isEmpty(),
-  check("price").not().isEmpty(),
-  check("discount").not().isEmpty(),
-  check("qty").not().isEmpty(),
-  
-  productController.updateProduct
-);
+
 
 
 router.patch('/addreview/:pid', productController.addReview);
-router.delete("/:pid", productController.deleteProduct);
+
 
 module.exports = router;

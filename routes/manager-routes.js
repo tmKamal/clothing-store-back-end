@@ -5,7 +5,7 @@ const managerControllers = require("../controllers/manager-controllers");
 
 const router = express.Router();
 
-
+router.get("/",managerControllers.getAllManagers);
 
 router.post("/login", managerControllers.login);
 
@@ -17,5 +17,6 @@ router.post(
     managerControllers.signUp
   );
 
+router.post("/password",check("newPassword").isLength({ min: 4 }),managerControllers.updatePassword);
 
 module.exports = router;

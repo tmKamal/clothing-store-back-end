@@ -8,16 +8,14 @@ const fs = require('fs');
 const path = require('path');
 const cartRoutes = require('./routes/cart-routes');
 var port = process.env.PORT || 9000;
-const productRoutes=require("./routes/product-routes");
-const userRoutes=require("./routes/user-routes");
-const managerRoutes=require("./routes/manager-routes");
+const productRoutes = require('./routes/product-routes');
+const userRoutes = require('./routes/user-routes');
+const managerRoutes = require('./routes/manager-routes');
 const wishlistRoutes = require('./routes/wishlist-routes');
 const cors = require('cors');
-
 const orderRoutes = require('./routes/order-routes');
+
 const app = express();
-
-
 app.use(bodyParser.json()); //body parser middleware must be declare here, before request reach the routes (ex:placesRoutes,userRoutes), because middleware always parse top to bottom, thats why they have a next().
 
 app.use('/uploads/images', express.static(path.join('uploads', 'images'))); //just returns the requseted file(image).
@@ -33,7 +31,6 @@ app.use('/api/order', orderRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/manager', managerRoutes);
-
 
 app.use((req, res, next) => {
     const error = new HttpError('page not found!', 404);

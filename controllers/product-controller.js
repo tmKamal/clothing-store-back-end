@@ -6,6 +6,22 @@ const HttpError = require('../models/http-error');
 const Product = require('../models/product');
 const Category = require('../models/category');
 
+const getAllProducts=async(req,res,next)=>{
+    let products;
+  try {
+    products = await Product.find();
+  } catch (err) {
+    const error = new HttpError(
+      "something went wrong on the db, when retriving Products",
+      500
+    );
+    return next(error);
+  }
+  res
+    .status(200)
+    .json({ products: products.map((p) => p.toObject({ getters: true })) });
+}
+
 const getProductById = async (req, res, next) => {
     const pid = req.params.pid;
     let product;
@@ -217,3 +233,4 @@ exports.createProduct = createProduct;
 exports.updateProduct = updateProduct;
 exports.deleteProduct = deleteProduct;
 exports.addReview = addReview;
+exports.getAllProducts=getAllProducts;
