@@ -12,6 +12,7 @@ const productRoutes=require("./routes/product-routes");
 const userRoutes=require("./routes/user-routes");
 const managerRoutes=require("./routes/manager-routes");
 const wishlistRoutes = require('./routes/wishlist-routes');
+const cors = require('cors');
 
 const orderRoutes = require('./routes/order-routes');
 const app = express();
@@ -21,16 +22,7 @@ app.use(bodyParser.json()); //body parser middleware must be declare here, befor
 
 app.use('/uploads/images', express.static(path.join('uploads', 'images'))); //just returns the requseted file(image).
 
-app.use((req, res, next) => {
-    //this custom middleware use to solve the error when connecting the react. without these settings browser will throw bunch of errors. Postman can still work without this middleware.
-    res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Credentials", "true");
-	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-	res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Authorization, Accept,content-type,application/json');
-	res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, Authorization,X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-
-    next();
-});
+app.use(cors());
 
 app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
