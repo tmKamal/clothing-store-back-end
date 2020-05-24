@@ -4,7 +4,7 @@ const Order = require('../models/order');
 
 const getOrders = async (req, res, next) => {
     try {
-        const userId = mongoose.Types.ObjectId(req.userData);
+        const userId = mongoose.Types.ObjectId(req.userData.userId);
 
         let returnod = await Order.findOne({
             user: userId
@@ -24,7 +24,7 @@ const getOrders = async (req, res, next) => {
 
 const addOrder = async (req, res, next) => {
     try {
-        const userId = mongoose.Types.ObjectId(req.userData);
+        const userId = mongoose.Types.ObjectId(req.userData.userId);
 
         const newOrder = req.body;
         let order = await Order.findOne({
@@ -55,7 +55,7 @@ const addOrder = async (req, res, next) => {
 
 const completeOrder = async (req, res, next) => {
     try {
-        const userId = mongoose.Types.ObjectId(req.userData);
+        const userId = mongoose.Types.ObjectId(req.userData.userId);
         const orderId = req.body.orderId;
 
         const order = await Order.update(
@@ -78,7 +78,7 @@ const completeOrder = async (req, res, next) => {
 
 const itemReviewed = async (req, res, next) => {
     try {
-        const userId = mongoose.Types.ObjectId(req.userData);
+        const userId = mongoose.Types.ObjectId(req.userData.userId);
         const orderId = req.body.orderId;
         const prod = req.body.product;
 
