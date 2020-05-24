@@ -10,7 +10,9 @@ const getProductById = async (req, res, next) => {
     const pid = req.params.pid;
     let product;
     try {
-        product = await Product.findById(pid).populate('category', ['name']);
+        product = await Product.findById(pid)
+            .populate('category', ['name'])
+            .populate('rating.userId', ['name', 'image']);
     } catch (err) {
         const error = new HttpError('Something went wrong on DB', 500);
         return next(error);
