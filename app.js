@@ -24,9 +24,9 @@ app.use('/uploads/images', express.static(path.join('uploads', 'images'))); //ju
 app.use((req, res, next) => {
     //this custom middleware use to solve the error when connecting the react. without these settings browser will throw bunch of errors. Postman can still work without this middleware.
     res.setHeader("Access-Control-Allow-Origin", "*");
-res.setHeader("Access-Control-Allow-Credentials", "true");
-res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+	res.setHeader("Access-Control-Allow-Credentials", "true");
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+	res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 
     next();
 });
