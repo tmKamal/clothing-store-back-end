@@ -7,81 +7,86 @@ const authentication = require('../middleware/authentication');
 //Add item to wishlist
 router.use(authentication);
 router.post('/', async (req, res) => {
-	const { product } = req.body;
-	try {
-		const id = mongoose.Types.ObjectId(req.userData);
-		const p = mongoose.Types.ObjectId(product);
-		let wishlist = await Wishlist.findOne({ user: id });
+    const { product } = req.body;
+    try {
+        const id = mongoose.Types.ObjectId(req.userData.userId);
+        const p = mongoose.Types.ObjectId(product);
+        let wishlist = await Wishlist.findOne({ user: id });
 
-		if (wishlist) {
-			const newItem = {};
-			newItem.product = p;
-			wishlist.products.unshift(newItem);
-			await wishlist.save();
-			return res.json(wishlist);
-		}
-		const newItem = {};
-		newItem.user = id;
-		newItem.products = {};
-		newItem.products.product = p;
+        if (wishlist) {
+            const newItem = {};
+            newItem.product = p;
+            wishlist.products.unshift(newItem);
+            await wishlist.save();
+            return res.json(wishlist);
+        }
+        const newItem = {};
+        newItem.user = id;
+        newItem.products = {};
+        newItem.products.product = p;
 
-		wishlist = new Wishlist(newItem);
-		await wishlist.save();
-		return res.json(wishlist);
-	} catch (err) {
-		console.error(err.message);
-		res.status(500).send('Server error');
-	}
+        wishlist = new Wishlist(newItem);
+        await wishlist.save();
+        return res.json(wishlist);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 });
 
 //get the wishlist with detailed items
 router.post('/getitems', async (req, res) => {
-	try {
-		const id = mongoose.Types.ObjectId(req.userData);
-		let wishlist = await Wishlist.findOne({ user: id }).populate('products.product', [ 'name', 'image' ]);
+    try {
+        const id = mongoose.Types.ObjectId(req.userData.userId);
+        let wishlist = await Wishlist.findOne({
+            user: id
+        }).populate('products.product', ['name', 'image']);
 
-		if (wishlist) {
-			return res.json(wishlist.products);
-		}
+        if (wishlist) {
+            return res.json(wishlist.products);
+        }
 
-		return res.json([]); // sending empty object if user doesn't have a wishlist yet
-	} catch (err) {
-		console.error(err.message);
-		res.status(500).send('Server error');
-	}
+        return res.json([]); // sending empty object if user doesn't have a wishlist yet
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 });
 
 //get only the wishlist
 router.post('/get', async (req, res) => {
-	try {
-		const id = mongoose.Types.ObjectId(req.userData);
-		let wishlist = await Wishlist.findOne({ user: id });
+    try {
+        const id = mongoose.Types.ObjectId(req.userData.userId);
+        let wishlist = await Wishlist.findOne({ user: id });
 
-		if (wishlist) {
-			return res.json(wishlist.products);
-		}
+        if (wishlist) {
+            return res.json(wishlist.products);
+        }
 
-		return res.json([]); // sending empty object if user doesn't have a wishlist yet
-	} catch (err) {
-		console.error(err.message);
-		res.status(500).send('Server error');
-	}
+        return res.json([]); // sending empty object if user doesn't have a wishlist yet
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 });
 
 //remove item from wishlist
 router.post('/removeitem', async (req, res) => {
-	try {
-		const removeId = mongoose.Types.ObjectId(req.body.product);
-		const userId = mongoose.Types.ObjectId(req.userData);
-		const wishlist = await Wishlist.update({ user: userId }, { $pull: { products: { product: removeId } } });
-		if (wishlist.nModified == 0) {
-			return res.status(400).json({ msg: 'Cannot find the item' });
-		}
-		res.status(200).json({ msg: 'Item removed successfully' });
-	} catch (err) {
-		onsole.error(err.message);
-		res.status(500).send('Server error');
-	}
+    try {
+        const removeId = mongoose.Types.ObjectId(req.body.product);
+        const userId = mongoose.Types.ObjectId(req.userData.userId);
+        const wishlist = await Wishlist.update(
+            { user: userId },
+            { $pull: { products: { product: removeId } } }
+        );
+        if (wishlist.nModified == 0) {
+            return res.status(400).json({ msg: 'Cannot find the item' });
+        }
+        res.status(200).json({ msg: 'Item removed successfully' });
+    } catch (err) {
+        onsole.error(err.message);
+        res.status(500).send('Server error');
+    }
 });
 
 module.exports = router;

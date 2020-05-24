@@ -11,7 +11,7 @@ router.use(authentication);
 router.post('/', async (req, res) => {
     const { product, qty, size } = req.body;
     try {
-        const id = mongoose.Types.ObjectId(req.userData);
+        const id = mongoose.Types.ObjectId(req.userData.userId);
         const p = mongoose.Types.ObjectId(product);
         let cart = await Cart.findOne({ user: id });
 
@@ -45,7 +45,7 @@ router.post('/', async (req, res) => {
 // @access  private
 router.post('/load', async (req, res) => {
     try {
-        const id = mongoose.Types.ObjectId(req.userData);
+        const id = mongoose.Types.ObjectId(req.userData.userId);
         let cart = await Cart.findOne({ user: id });
         if (cart) {
             return res.json(cart.products);
@@ -63,7 +63,7 @@ router.post('/load', async (req, res) => {
 // @access  private
 router.post('/loadcheckout', async (req, res) => {
     try {
-        const id = mongoose.Types.ObjectId(req.userData);
+        const id = mongoose.Types.ObjectId(req.userData.userId);
         let cart = await Cart.findOne({ user: id }).populate(
             'products.product',
             ['name', 'price', 'image', 'discount', 'qty']
@@ -88,12 +88,12 @@ router.post('/loadcheckout', async (req, res) => {
 // @access  private
 router.post('/updateqty', async (req, res) => {
     try {
-        console.log(req.userData);
+        console.log(req.userData.userId);
         let id = mongoose.Types.ObjectId(req.body.product);
-        const userId = mongoose.Types.ObjectId(req.userData);
+        const userId = mongoose.Types.ObjectId(req.userData.userId);
         const updatingQty = req.body.qty;
         const cart = await Cart.update(
-            { user: req.userData, 'products.product': id },
+            { user: req.userData.userId, 'products.product': id },
             { $inc: { 'products.$.qty': updatingQty } }
         );
         if (cart.n == 0) {
@@ -115,10 +115,10 @@ router.post('/updateqty', async (req, res) => {
 router.post('/updatesize', async (req, res) => {
     try {
         let id = mongoose.Types.ObjectId(req.body.product);
-        const userId = mongoose.Types.ObjectId(req.userData);
+        const userId = mongoose.Types.ObjectId(req.userData.userId);
         const updatingSize = req.body.size;
         const cart = await Cart.updateOne(
-            { user: req.userData, 'products.product': id },
+            { user: req.userData.userId, 'products.product': id },
             { $set: { 'products.$.size': updatingSize } }
         );
         if (cart.n == 0) {
@@ -138,7 +138,7 @@ router.post('/updatesize', async (req, res) => {
 router.post('/removeitem', async (req, res) => {
     try {
         const removeId = mongoose.Types.ObjectId(req.body.product);
-        const userId = mongoose.Types.ObjectId(req.userData);
+        const userId = mongoose.Types.ObjectId(req.userData.userId);
 
         const cart = await Cart.update(
             { user: userId },
@@ -162,7 +162,7 @@ router.post('/removeitem', async (req, res) => {
 // @access  private
 router.post('/clearcart', async (req, res) => {
     try {
-        const userId = mongoose.Types.ObjectId(req.userData);
+        const userId = mongoose.Types.ObjectId(req.userData.userId);
         const cart = await Cart.update(
             { user: userId },
             { $pull: { products: {} } },
