@@ -15,7 +15,8 @@ module.exports = (req, res, next) => {
 	}
 
 	try {
-		const token = req.headers.authrization.split(' ')[1]; //if headers not sets, it will handle by the catch
+		const tempToken = req.headers.authrization;
+		const token = tempToken.split(' ')[1]; //if headers not sets, it will handle by the catch
 
 		if (!token) {
 			//console.log('no token' + req.headers.authorization);

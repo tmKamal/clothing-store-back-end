@@ -2,7 +2,7 @@
     "name": "clothing-store-back-end",
     "version": "1.0.0",
     "description": "this is the back-end of our application",
-    "main": "index.js",
+    "main": "index.js", 
     "engines": {
         "npm": "6.13.4",
         "node": "12.16.1"
