@@ -14,8 +14,8 @@ const managerRoutes = require('./routes/manager-routes');
 const wishlistRoutes = require('./routes/wishlist-routes');
 const cors = require('cors');
 const orderRoutes = require('./routes/order-routes');
-const app = express();
 
+const app = express();
 app.use(bodyParser.json()); //body parser middleware must be declare here, before request reach the routes (ex:placesRoutes,userRoutes), because middleware always parse top to bottom, thats why they have a next().
 
 app.use('/uploads/images', express.static(path.join('uploads', 'images'))); //just returns the requseted file(image).
